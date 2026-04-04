@@ -1,0 +1,78 @@
+[
+  // ============================================
+  // VS Code Agent Keyboard Shortcuts
+  // ============================================
+  // Copy these to your keybindings.json (Cmd+K Cmd+S -> Open Keyboard Shortcuts JSON)
+
+  // Core Agents
+  {
+    "key": "cmd+shift+r",
+    "command": "copilot.invokeAgent",
+    "args": { "agent": "code-reviewer" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+shift+p",
+    "command": "copilot.invokeAgent",
+    "args": { "agent": "planner" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+shift+b",
+    "command": "copilot.invokeAgent",
+    "args": { "agent": "build-fix" },
+    "when": "editorTextFocus && editorHasErrors"
+  },
+  {
+    "key": "cmd+shift+s",
+    "command": "copilot.invokeAgent",
+    "args": { "agent": "security" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+shift+t",
+    "command": "copilot.invokeAgent",
+    "args": { "agent": "tdd" },
+    "when": "editorTextFocus"
+  },
+
+  // Quick Agent Selector (shows all enabled agents)
+  {
+    "key": "cmd+shift+a",
+    "command": "copilot.showAgentQuickPick",
+    "when": "editorTextFocus"
+  },
+
+  // Selection-based agents
+  {
+    "key": "cmd+k cmd+r",
+    "command": "copilot.reviewSelection",
+    "args": { "agent": "code-reviewer" },
+    "when": "editorHasSelection"
+  },
+  {
+    "key": "cmd+k cmd+s",
+    "command": "copilot.reviewSelection",
+    "args": { "agent": "security" },
+    "when": "editorHasSelection"
+  },
+
+  // File-level agents
+  {
+    "key": "cmd+k cmd+f",
+    "command": "copilot.reviewFile",
+    "args": { "agent": "code-reviewer" }
+  },
+
+  // Project-level agents
+  {
+    "key": "cmd+k cmd+p",
+    "command": "copilot.planFeature",
+    "args": { "agent": "planner" }
+  },
+  {
+    "key": "cmd+k cmd+a",
+    "command": "copilot.analyzeArchitecture",
+    "args": { "agent": "architect" }
+  }
+]

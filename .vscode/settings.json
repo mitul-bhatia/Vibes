@@ -1,0 +1,65 @@
+{
+  // ============================================
+  // VS Code Optimized Agents - Workspace Settings
+  // ============================================
+
+  // Editor settings optimized for agent workflows
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  // Problems panel - show agent findings
+  "problems.showCurrentInStatus": true,
+  "problems.sortOrder": "severity",
+
+  // GitHub Copilot settings
+  "github.copilot.enable": {
+    "*": true
+  },
+
+  // File associations
+  "files.associations": {
+    "*.md": "markdown",
+    "agents.json": "jsonc"
+  },
+
+  // Search exclusions (faster agent searches)
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.git": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.next": true,
+    "**/coverage": true
+  },
+
+  // Terminal settings for agent commands
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.scrollback": 10000,
+
+  // Git integration
+  "git.confirmSync": false,
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+
+  // Explorer settings
+  "explorer.confirmDelete": false,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.test.ts, ${capture}.spec.ts",
+    "*.tsx": "${capture}.test.tsx, ${capture}.spec.tsx",
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb"
+  },
+
+  // Recommended extensions for agent workflows
+  "recommendations": [
+    "github.copilot",
+    "github.copilot-chat",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-typescript-next"
+  ]
+}

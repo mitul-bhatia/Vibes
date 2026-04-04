@@ -1,0 +1,114 @@
+{
+  "version": "1.0.0",
+  "name": "VS Code Optimized Agents",
+  "description": "Curated agent collection for VS Code + GitHub Copilot",
+
+  "agents": {
+    "core": [
+      {
+        "id": "code-reviewer",
+        "name": "Code Reviewer",
+        "icon": "eye",
+        "shortcut": "Cmd+Shift+R",
+        "description": "Review code quality and security",
+        "file": "core/code-reviewer.md",
+        "triggers": ["onSave", "onCommit"],
+        "model": "sonnet"
+      },
+      {
+        "id": "planner",
+        "name": "Planner",
+        "icon": "note",
+        "shortcut": "Cmd+Shift+P",
+        "description": "Plan complex features",
+        "file": "core/planner.md",
+        "triggers": ["manual"],
+        "model": "opus"
+      },
+      {
+        "id": "build-fix",
+        "name": "Build Fix",
+        "icon": "wrench",
+        "shortcut": "Cmd+Shift+B",
+        "description": "Fix TypeScript/build errors",
+        "file": "core/build-fix.md",
+        "triggers": ["onBuildError"],
+        "model": "sonnet"
+      },
+      {
+        "id": "security",
+        "name": "Security",
+        "icon": "shield",
+        "shortcut": "Cmd+Shift+S",
+        "description": "Security vulnerability scan",
+        "file": "core/security.md",
+        "triggers": ["onCommit"],
+        "model": "sonnet"
+      },
+      {
+        "id": "tdd",
+        "name": "TDD Guide",
+        "icon": "beaker",
+        "shortcut": "Cmd+Shift+T",
+        "description": "Test-driven development",
+        "file": "core/tdd.md",
+        "triggers": ["manual"],
+        "model": "sonnet"
+      },
+      {
+        "id": "architect",
+        "name": "Architect",
+        "icon": "organization",
+        "shortcut": "Cmd+K Cmd+A",
+        "description": "System design decisions",
+        "file": "core/architect.md",
+        "triggers": ["manual"],
+        "model": "opus"
+      }
+    ],
+
+    "language": [
+      {
+        "id": "ts-reviewer",
+        "name": "TypeScript Reviewer",
+        "icon": "symbol-type-parameter",
+        "description": "TypeScript/JavaScript review",
+        "file": "lang/ts-reviewer.md",
+        "languages": ["typescript", "javascript", "typescriptreact", "javascriptreact"],
+        "triggers": ["onSave"],
+        "model": "sonnet"
+      },
+      {
+        "id": "py-reviewer",
+        "name": "Python Reviewer",
+        "icon": "symbol-method",
+        "description": "Python code review",
+        "file": "lang/py-reviewer.md",
+        "languages": ["python"],
+        "triggers": ["onSave"],
+        "model": "sonnet"
+      }
+    ]
+  },
+
+  "workflows": {
+    "feature": {
+      "name": "Feature Development",
+      "steps": ["planner", "tdd", "code-reviewer", "security"]
+    },
+    "bugfix": {
+      "name": "Bug Fix",
+      "steps": ["tdd", "build-fix", "code-reviewer"]
+    },
+    "refactor": {
+      "name": "Refactoring",
+      "steps": ["planner", "architect", "code-reviewer"]
+    }
+  },
+
+  "defaults": {
+    "autoTrigger": true,
+    "showStatusBar": true,
+    "quickPanelAgents": ["code-reviewer", "planner", "build-fix", "security", "tdd"]
+  }
+}

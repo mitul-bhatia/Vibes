@@ -1,0 +1,66 @@
+{
+  // ============================================
+  // VS Code Optimized Agents Configuration
+  // ============================================
+
+  // Agent enablement - set to false to disable
+  "copilot.agents.enabled": {
+    "code-reviewer": true,
+    "planner": true,
+    "build-fix": true,
+    "security": true,
+    "tdd": true,
+    "architect": true,
+    "ts-reviewer": true,
+    "py-reviewer": false,
+    "refactor": true,
+    "docs": true
+  },
+
+  // Auto-trigger settings
+  "copilot.agents.autoTrigger": {
+    "code-reviewer": {
+      "onSave": true,
+      "onCommit": true
+    },
+    "security": {
+      "onCommit": true,
+      "patterns": ["**/auth/**", "**/api/**", "**/*.env*"]
+    },
+    "build-fix": {
+      "onError": true
+    }
+  },
+
+  // Agent model preferences (lower cost = faster)
+  "copilot.agents.models": {
+    "code-reviewer": "sonnet",
+    "planner": "opus",
+    "build-fix": "sonnet",
+    "security": "sonnet",
+    "tdd": "sonnet",
+    "architect": "opus"
+  },
+
+  // Status bar display
+  "copilot.agents.statusBar": {
+    "enabled": true,
+    "showActiveAgent": true,
+    "showIssueCount": true
+  },
+
+  // Quick panel agents (appear in Cmd+Shift+A)
+  "copilot.agents.quickPanel": [
+    "code-reviewer",
+    "planner",
+    "build-fix",
+    "security",
+    "tdd"
+  ],
+
+  // Context menu integration
+  "copilot.agents.contextMenu": {
+    "editor": ["code-reviewer", "security", "build-fix"],
+    "explorer": ["planner", "architect"]
+  }
+}
