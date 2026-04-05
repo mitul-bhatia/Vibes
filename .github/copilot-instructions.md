@@ -41,8 +41,8 @@ This protocol is mandatory and overrides fast-path behavior.
 
 For any request involving pattern audit or refactor workflows (GoF, SOLID, PATTERN_AUDIT, design-pattern refactor), always load both skill files before any analysis, planning, or edits:
 
-1. `/Users/mitulbhatia/Downloads/Vibes 2/.github/skills/systemdesgin_pattern_auditer/SKILL.md`
-2. `/Users/mitulbhatia/Downloads/Vibes 2/.github/skills/system_design_pattern_applier/SKILL.md`
+1. `/Users/mitulbhatia/Desktop/Viberes/.github/skills/systemdesgin_pattern_auditer/SKILL.md`
+2. `/Users/mitulbhatia/Desktop/Viberes/.github/skills/system_design_pattern_applier/SKILL.md`
 
 If either file cannot be loaded, stop and ask for the correct path before proceeding.
 
