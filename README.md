@@ -4,16 +4,19 @@ Ready-to-use prompt files for GitHub Copilot in VS Code.
 
 ## What's Included
 
-6 custom agents that work as `/commands` in Copilot Chat:
+9 custom agents that work as `/commands` in Copilot Chat:
 
-| Command        | Purpose                                 |
-| -------------- | --------------------------------------- |
-| `/code-review` | Review code for bugs, security, quality |
-| `/plan`        | Create implementation plans             |
-| `/build-fix`   | Fix TypeScript/build errors             |
-| `/security`    | Security vulnerability scan             |
-| `/tdd`         | Test-driven development                 |
-| `/architect`   | System design decisions                 |
+| Command           | Purpose                                 |
+| ----------------- | --------------------------------------- |
+| `/code-review`    | Review code for bugs, security, quality |
+| `/plan`           | Create implementation plans             |
+| `/build-fix`      | Fix TypeScript/build errors             |
+| `/security`       | Security vulnerability scan             |
+| `/tdd`            | Test-driven development                 |
+| `/architect`      | System design decisions                 |
+| `/diagram-suite`  | Generate full UML diagram baseline      |
+| `/diagram-update` | Update existing diagrams safely         |
+| `/diagram-pdf`    | Export and package final diagram PDF    |
 
 ## Setup (5 minutes)
 
@@ -54,6 +57,9 @@ cp -r .github /path/to/your/project/
 /security         Security scan
 /tdd              TDD workflow
 /architect        Architecture design
+/diagram-suite    Generate Class/Object/Use Case/Activity/Sequence
+/diagram-update   Update one or more existing diagrams
+/diagram-pdf      Build per-diagram PDFs and merged PDF book
 ```
 
 ### With Context
@@ -62,6 +68,7 @@ cp -r .github /path/to/your/project/
 /code-review Review the authentication logic
 /plan Create plan for user profile feature
 /security Check this API endpoint
+/diagram-suite Generate all diagrams from diagrams/PROJECT_CONTEXT.md
 ```
 
 ### With Selection
@@ -81,8 +88,21 @@ cp -r .github /path/to/your/project/
     ├── build-fix.md           # /build-fix
     ├── security.md            # /security
     ├── tdd.md                 # /tdd
-    └── architect.md           # /architect
+    ├── architect.md           # /architect
+    ├── diagram-suite.md       # /diagram-suite
+    ├── diagram-update.md      # /diagram-update
+    └── diagram-pdf.md         # /diagram-pdf
 ```
+
+## Diagram Workstation
+
+Diagram automation is provided out of the box:
+
+- `diagrams/manifest.json` defines required UML/ERD outputs.
+- `diagrams/PROJECT_CONTEXT.md` captures project context for generation.
+- `npm run diagrams:validate` validates manifest and required source coverage.
+- `npm run diagrams:book` exports PDFs and builds `diagrams/out/diagram-book.pdf`.
+- `diagram-workstation/` contains reusable templates and workflow blueprint.
 
 ## Add Your Own Agent
 

@@ -1,0 +1,15 @@
+{
+  "name": "vibes-diagram-workstation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Professional draw.io UML workflow and PDF packaging",
+  "type": "module",
+  "scripts": {
+    "diagrams:validate": "node scripts/diagrams/validate-manifest.mjs",
+    "diagrams:validate:manifest-only": "node scripts/diagrams/validate-manifest.mjs diagrams/manifest.json --allow-missing-sources",
+    "diagrams:book": "npm run diagrams:validate && node scripts/diagrams/build-diagram-book.mjs"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1"
+  }
+}

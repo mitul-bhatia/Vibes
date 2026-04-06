@@ -49,6 +49,9 @@ dist/
 build/
 *.tsbuildinfo
 .cache/
+diagrams/out/*.pdf
+diagrams/out/pdf/*.pdf
+diagrams/out/diagram-build-report.json
 
 # Test coverage
 coverage/

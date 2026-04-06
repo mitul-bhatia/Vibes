@@ -38,6 +38,9 @@ Open Copilot Chat (`Cmd+Shift+I`) and use:
 /security       Scan for vulnerabilities
 /tdd            Help me write tests for [function]
 /architect      Design architecture for [system]
+/diagram-suite  Generate full UML diagram baseline
+/diagram-update Update existing diagrams without reset
+/diagram-pdf    Export and package the final PDF book
 ```
 
 ### With Selection
@@ -67,14 +70,17 @@ Add to `keybindings.json` (`Cmd+K Cmd+S` → Open JSON):
 
 ## Available Agents
 
-| Command | Purpose |
-|---------|---------|
-| `/code-review` | Review code quality, security, bugs |
-| `/plan` | Create implementation plans |
-| `/build-fix` | Fix TypeScript/build errors |
-| `/security` | Security vulnerability scan |
-| `/tdd` | Test-driven development |
-| `/architect` | System design decisions |
+| Command           | Purpose                                          |
+| ----------------- | ------------------------------------------------ |
+| `/code-review`    | Review code quality, security, bugs              |
+| `/plan`           | Create implementation plans                      |
+| `/build-fix`      | Fix TypeScript/build errors                      |
+| `/security`       | Security vulnerability scan                      |
+| `/tdd`            | Test-driven development                          |
+| `/architect`      | System design decisions                          |
+| `/diagram-suite`  | Generate Class/Object/Use Case/Activity/Sequence |
+| `/diagram-update` | Update existing diagram files safely             |
+| `/diagram-pdf`    | Build diagram PDF package                        |
 
 ## File Structure
 
@@ -87,7 +93,10 @@ Add to `keybindings.json` (`Cmd+K Cmd+S` → Open JSON):
     ├── build-fix.md           # /build-fix command
     ├── security.md            # /security command
     ├── tdd.md                 # /tdd command
-    └── architect.md           # /architect command
+    ├── architect.md           # /architect command
+    ├── diagram-suite.md       # /diagram-suite command
+    ├── diagram-update.md      # /diagram-update command
+    └── diagram-pdf.md         # /diagram-pdf command
 ```
 
 ## How It Works
@@ -106,10 +115,12 @@ Create `.github/prompts/my-agent.md`:
 You are an expert [role]. Help with [task].
 
 ## Guidelines
+
 - Rule 1
 - Rule 2
 
 ## Output Format
+
 [How to format responses]
 ```
 

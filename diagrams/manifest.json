@@ -1,0 +1,54 @@
+{
+  "bookTitle": "Project Diagram Book",
+  "requiredTypes": [
+    "class",
+    "object",
+    "use-case",
+    "activity",
+    "sequence"
+  ],
+  "diagrams": [
+    {
+      "id": "01-class-diagram",
+      "type": "class",
+      "source": "diagrams/src/01-class-diagram.drawio",
+      "required": true,
+      "title": "Class Diagram"
+    },
+    {
+      "id": "02-object-diagram",
+      "type": "object",
+      "source": "diagrams/src/02-object-diagram.drawio",
+      "required": true,
+      "title": "Object Diagram"
+    },
+    {
+      "id": "03-use-case-diagram",
+      "type": "use-case",
+      "source": "diagrams/src/03-use-case-diagram.drawio",
+      "required": true,
+      "title": "Use Case Diagram"
+    },
+    {
+      "id": "04-activity-diagram",
+      "type": "activity",
+      "source": "diagrams/src/04-activity-diagram.drawio",
+      "required": true,
+      "title": "Activity Diagram"
+    },
+    {
+      "id": "05-sequence-diagram",
+      "type": "sequence",
+      "source": "diagrams/src/05-sequence-diagram.drawio",
+      "required": true,
+      "title": "Sequence Diagram"
+    },
+    {
+      "id": "06-erd-diagram",
+      "type": "erd",
+      "source": "diagrams/src/06-erd-diagram.drawio",
+      "required": false,
+      "title": "Entity Relationship Diagram"
+    }
+  ]
+}

@@ -1,89 +1,130 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "Code Review",
-      "type": "shell",
-      "command": "echo 'Invoking code-reviewer agent...'",
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Security Scan",
-      "type": "shell",
-      "command": "npm audit --audit-level=high && echo 'Security scan complete'",
-      "group": "none",
-      "presentation": {
-        "reveal": "always"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Type Check",
-      "type": "shell",
-      "command": "npx tsc --noEmit --pretty",
-      "group": "build",
-      "presentation": {
-        "reveal": "always"
-      },
-      "problemMatcher": "$tsc"
-    },
-    {
-      "label": "Lint",
-      "type": "shell",
-      "command": "npx eslint . --ext .ts,.tsx,.js,.jsx",
-      "group": "build",
-      "presentation": {
-        "reveal": "always"
-      },
-      "problemMatcher": "$eslint-stylish"
-    },
-    {
-      "label": "Test",
-      "type": "shell",
-      "command": "npm test",
-      "group": "test",
-      "presentation": {
-        "reveal": "always"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Test (Watch)",
-      "type": "shell",
-      "command": "npm test -- --watch",
-      "group": "test",
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Build",
-      "type": "shell",
-      "command": "npm run build",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "presentation": {
-        "reveal": "always"
-      },
-      "problemMatcher": "$tsc"
-    },
-    {
-      "label": "Full Check (Type + Lint + Test)",
-      "dependsOn": ["Type Check", "Lint", "Test"],
-      "dependsOrder": "sequence",
-      "group": "build",
-      "presentation": {
-        "reveal": "always"
-      }
-    }
-  ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Code Review",
+			"type": "shell",
+			"command": "echo 'Invoking code-reviewer agent...'",
+			"group": "none",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Security Scan",
+			"type": "shell",
+			"command": "npm audit --audit-level=high && echo 'Security scan complete'",
+			"group": "none",
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Type Check",
+			"type": "shell",
+			"command": "npx tsc --noEmit --pretty",
+			"group": "build",
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": "$tsc"
+		},
+		{
+			"label": "Lint",
+			"type": "shell",
+			"command": "npx eslint . --ext .ts,.tsx,.js,.jsx",
+			"group": "build",
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": "$eslint-stylish"
+		},
+		{
+			"label": "Test",
+			"type": "shell",
+			"command": "npm test",
+			"group": "test",
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Test (Watch)",
+			"type": "shell",
+			"command": "npm test -- --watch",
+			"group": "test",
+			"isBackground": true,
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Build",
+			"type": "shell",
+			"command": "npm run build",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": "$tsc"
+		},
+		{
+			"label": "Diagram Validate",
+			"type": "shell",
+			"command": "npm run diagrams:validate",
+			"group": "build",
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Diagram Book (PDF)",
+			"type": "shell",
+			"command": "npm run diagrams:book",
+			"group": "build",
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Diagram Full Workflow",
+			"dependsOn": [
+				"Diagram Validate",
+				"Diagram Book (PDF)"
+			],
+			"dependsOrder": "sequence",
+			"group": "build",
+			"presentation": {
+				"reveal": "always"
+			}
+		},
+		{
+			"label": "Full Check (Type + Lint + Test)",
+			"dependsOn": [
+				"Type Check",
+				"Lint",
+				"Test"
+			],
+			"dependsOrder": "sequence",
+			"group": "build",
+			"presentation": {
+				"reveal": "always"
+			}
+		},
+		{
+			"label": "noop",
+			"type": "shell",
+			"command": "true"
+		}
+	]
 }

@@ -111,6 +111,14 @@ Enable/disable agents in `.vscode/settings.json`:
 3. @code-reviewer - Review changes
 ```
 
+### Pattern 4: Diagram Pipeline
+
+```
+1. /diagram-suite - Generate Class/Object/Use Case/Activity/Sequence diagrams
+2. /diagram-update - Apply scoped changes as system evolves
+3. /diagram-pdf - Build merged diagram-book PDF
+```
+
 ## VS Code Integration
 
 ### Keyboard Shortcuts
