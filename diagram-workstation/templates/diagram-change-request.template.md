@@ -21,6 +21,8 @@ Use this template before running /diagram-update.
 - Relationship changes:
 - Label/text changes:
 - Layout concerns:
+- Mermaid syntax constraints to preserve:
+- Required alignment direction changes (if any):
 
 ## Compatibility Requirements
 

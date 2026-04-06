@@ -1,0 +1,115 @@
+classDiagram
+  direction LR
+
+  class User {
+    +id: UUID
+    +email: string
+    +passwordHash: string
+    +authProvider: AuthProvider
+    +createdAt: DateTime
+  }
+
+  class Profile {
+    +id: UUID
+    +userId: UUID
+    +displayName: string
+    +city: string
+    +bio: string
+    +onboardingComplete: boolean
+  }
+
+  class Preference {
+    +id: UUID
+    +userId: UUID
+    +budgetMin: number
+    +budgetMax: number
+    +moveInDate: Date
+    +smokingPreference: string
+  }
+
+  class Swipe {
+    +id: UUID
+    +fromUserId: UUID
+    +toUserId: UUID
+    +direction: SwipeDirection
+    +createdAt: DateTime
+  }
+
+  class Match {
+    +id: UUID
+    +userAId: UUID
+    +userBId: UUID
+    +compatibilityScore: number
+    +createdAt: DateTime
+  }
+
+  class Conversation {
+    +id: UUID
+    +matchId: UUID
+    +createdAt: DateTime
+  }
+
+  class Message {
+    +id: UUID
+    +conversationId: UUID
+    +senderId: UUID
+    +body: string
+    +sentAt: DateTime
+  }
+
+  class AuthService {
+    +signup(input): AuthTokens
+    +login(input): AuthTokens
+    +exchangeGoogleCode(code): AuthTokens
+  }
+
+  class DiscoveryService {
+    +getFeed(userId): Candidate[]
+    +recordSwipe(userId, targetId, direction): SwipeResult
+  }
+
+  class MatchingService {
+    +computeCompatibility(userA, userB): number
+    +openMatchIfMutual(userA, userB): Match?
+  }
+
+  class ChatService {
+    +openConversation(matchId): Conversation
+    +sendMessage(matchId, senderId, body): Message
+  }
+
+  class UserRepository {
+    +findById(userId): User
+    +findByEmail(email): User?
+    +save(user): User
+  }
+
+  class SwipeRepository {
+    +saveSwipe(swipe): Swipe
+    +hasMutualLike(userA, userB): boolean
+  }
+
+  class MatchRepository {
+    +createMatch(userA, userB, score): Match
+    +findByUser(userId): Match[]
+  }
+
+  class ConversationRepository {
+    +findByMatch(matchId): Conversation?
+    +create(matchId): Conversation
+    +appendMessage(message): Message
+  }
+
+  User "1" --> "1" Profile : owns
+  User "1" --> "1" Preference : configures
+  User "1" --> "0..*" Swipe : creates
+  User "1" --> "0..*" Match : participates
+  Match "1" --> "1" Conversation : opens
+  Conversation "1" --> "0..*" Message : contains
+
+  AuthService ..> UserRepository : authenticates via
+  DiscoveryService ..> SwipeRepository : persists
+  DiscoveryService ..> MatchingService : delegates
+  MatchingService ..> MatchRepository : creates/queries
+  ChatService ..> MatchRepository : authorizes
+  ChatService ..> ConversationRepository : persists

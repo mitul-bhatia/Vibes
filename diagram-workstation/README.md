@@ -1,6 +1,6 @@
-# Draw.io Diagram Workstation
+# Mermaid Diagram Workstation
 
-This workstation standardizes how you generate, update, and package professional diagrams for any project.
+This workstation standardizes how you generate, update, and package professional Mermaid diagrams for any project.
 
 ## What You Get
 
@@ -10,7 +10,7 @@ This workstation standardizes how you generate, update, and package professional
   - /diagram-pdf
 - A manifest-driven diagram contract in diagrams/manifest.json
 - A reusable project context file in diagrams/PROJECT_CONTEXT.md
-- A PDF book pipeline that exports each draw.io source and merges all PDFs into one final document
+- A PDF book pipeline that exports each Mermaid source and merges all PDFs into one final document
 
 ## Supported Diagram Types
 
@@ -26,7 +26,7 @@ This workstation standardizes how you generate, update, and package professional
 
 - diagrams/PROJECT_CONTEXT.md
 - diagrams/manifest.json
-- diagrams/src/\*.drawio
+- diagrams/src/\*.mmd
 - diagrams/out/pdf/\*.pdf
 - diagrams/out/diagram-book.pdf
 - scripts/diagrams/\*.mjs
@@ -35,12 +35,26 @@ This workstation standardizes how you generate, update, and package professional
 
 1. Fill diagrams/PROJECT_CONTEXT.md for the target project.
 2. Update diagrams/manifest.json if you need to add or remove diagram IDs.
-3. Run /diagram-suite in Copilot Chat to generate or refresh required diagram sources.
-4. Ask for /diagram-update whenever business logic changes.
-5. Run npm run diagrams:book to produce the final PDF package.
+3. Run npm run diagrams:bootstrap to create starter Mermaid sources for missing files.
+4. Run /diagram-suite in Copilot Chat to generate or refresh required diagram sources.
+5. Ask for /diagram-update whenever business logic changes.
+6. Run npm run diagrams:preflight to enforce fail-fast type checks.
+7. Run npm run diagrams:book to produce the final PDF package.
+
+## Skill Packs
+
+Use these project skills to enforce professional diagram quality:
+
+- .github/skills/mermaid-class-diagram/SKILL.md
+- .github/skills/mermaid-object-diagram/SKILL.md
+- .github/skills/mermaid-use-case-diagram/SKILL.md
+- .github/skills/mermaid-activity-diagram/SKILL.md
+- .github/skills/mermaid-sequence-diagram/SKILL.md
+- .github/skills/mermaid-erd-diagram/SKILL.md
+- .github/skills/mermaid-diagram-quality/SKILL.md
 
 ## Update Policy
 
 - Keep diagram IDs and file names stable for incremental updates.
 - If a diagram is renamed, update diagrams/manifest.json in the same change.
-- Preserve existing draw.io IDs whenever possible to keep manual edits intact.
+- Preserve existing Mermaid structural identifiers and naming whenever possible to keep updates stable.

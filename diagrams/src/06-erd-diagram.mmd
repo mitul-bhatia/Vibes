@@ -1,0 +1,63 @@
+erDiagram
+  USER {
+    string id PK
+    string email
+    string passwordHash
+    string authProvider
+    datetime createdAt
+  }
+
+  PROFILE {
+    string id PK
+    string userId FK
+    string displayName
+    string city
+    string bio
+    boolean onboardingComplete
+  }
+
+  PREFERENCE {
+    string id PK
+    string userId FK
+    int budgetMin
+    int budgetMax
+    date moveInDate
+    string smokingPreference
+  }
+
+  SWIPE {
+    string id PK
+    string fromUserId FK
+    string toUserId FK
+    string direction
+    datetime createdAt
+  }
+
+  MATCH {
+    string id PK
+    string userAId FK
+    string userBId FK
+    float compatibilityScore
+    datetime createdAt
+  }
+
+  CONVERSATION {
+    string id PK
+    string matchId FK
+    datetime createdAt
+  }
+
+  MESSAGE {
+    string id PK
+    string conversationId FK
+    string senderId FK
+    string body
+    datetime sentAt
+  }
+
+  USER ||--|| PROFILE : owns
+  USER ||--|| PREFERENCE : configures
+  USER ||--o{ SWIPE : initiates
+  USER ||--o{ MATCH : participates
+  MATCH ||--|| CONVERSATION : opens
+  CONVERSATION ||--o{ MESSAGE : stores

@@ -1,0 +1,50 @@
+flowchart LR
+  subgraph Actors
+    Guest((Guest))
+    Member((Authenticated User))
+    Admin((Support/Admin))
+    Google((Google OAuth))
+  end
+
+  subgraph FlatelySystem[Flately Platform Use Cases]
+    UC1([Register Account])
+    UC2([Login with Email])
+    UC3([Login with Google])
+    UC4([Exchange OAuth Code])
+    UC5([Complete Onboarding])
+    UC6([Update Profile])
+    UC7([Set Lifestyle Preferences])
+    UC8([View Discovery Feed])
+    UC9([Like Candidate])
+    UC10([Pass Candidate])
+    UC11([View Matches])
+    UC12([Open Match Conversation])
+    UC13([Send Real-time Message])
+    UC14([Request Upload Signature])
+    UC15([Moderate User Report])
+  end
+
+  Guest --> UC1
+  Guest --> UC2
+  Guest --> UC3
+  Google --> UC4
+
+  Member --> UC5
+  Member --> UC6
+  Member --> UC7
+  Member --> UC8
+  Member --> UC9
+  Member --> UC10
+  Member --> UC11
+  Member --> UC12
+  Member --> UC13
+  Member --> UC14
+
+  Admin --> UC15
+
+  UC3 --> UC4
+  UC8 --> UC9
+  UC8 --> UC10
+  UC9 --> UC11
+  UC11 --> UC12
+  UC12 --> UC13

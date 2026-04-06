@@ -21,6 +21,14 @@ Use this template before running /diagram-suite.
 - Critical workflows:
 - Failure paths and edge cases:
 
+## Mermaid Quality Directives
+
+- Preferred flow direction by diagram type (LR/TD):
+- Mandatory subgraphs/lanes to enforce alignment:
+- Minimum depth expectations (nodes + relationships) per diagram:
+- Naming conventions for nodes and edges:
+- Visual style constraints (theme, emphasis colors):
+
 ## Domain Model
 
 - Core entities:

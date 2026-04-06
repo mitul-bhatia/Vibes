@@ -1,0 +1,42 @@
+flowchart TD
+  Start([Start Session]) --> Auth{Valid JWT Session?}
+
+  Auth -- No --> LoginChoice{Login Method}
+  LoginChoice -- Email --> EmailLogin[Submit email/password]
+  LoginChoice -- Google --> OAuthStart[Start Google OAuth]
+  OAuthStart --> OAuthExchange[Exchange one-time code]
+  EmailLogin --> LoginOk{Auth Success?}
+  OAuthExchange --> LoginOk
+  LoginOk -- No --> AuthError[Show auth error + retry]
+  AuthError --> LoginChoice
+  LoginOk -- Yes --> Bootstrap[Load profile + preference]
+
+  Auth -- Yes --> Bootstrap
+  Bootstrap --> ProfileGate{Onboarding complete?}
+  ProfileGate -- No --> Onboarding[Complete profile and preferences]
+  Onboarding --> OnboardingSaved{Save successful?}
+  OnboardingSaved -- No --> OnboardingRetry[Show validation errors]
+  OnboardingRetry --> Onboarding
+  OnboardingSaved -- Yes --> Feed
+
+  ProfileGate -- Yes --> Feed[Load discovery feed]
+  Feed --> FeedOk{Feed load success?}
+  FeedOk -- No --> FeedRetry[Show retry button]
+  FeedRetry --> Feed
+  FeedOk -- Yes --> SwipeChoice{Swipe decision}
+
+  SwipeChoice -- Like --> SaveLike[POST /discovery/swipe LIKE]
+  SwipeChoice -- Pass --> SavePass[POST /discovery/swipe PASS]
+  SavePass --> Feed
+
+  SaveLike --> SwipeStored{Swipe stored?}
+  SwipeStored -- No --> SwipeError[Display transient failure]
+  SwipeError --> Feed
+  SwipeStored -- Yes --> Mutual{Mutual like?}
+  Mutual -- No --> Feed
+  Mutual -- Yes --> MatchCreate[Create Match + Conversation]
+
+  MatchCreate --> MatchesPage[Open matches page]
+  MatchesPage --> ChatOpen[Enter chat room]
+  ChatOpen --> SendMsg[Send message via Socket.IO]
+  SendMsg --> End([End or continue chatting])

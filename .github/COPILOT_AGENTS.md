@@ -38,10 +38,12 @@ Open Copilot Chat (`Cmd+Shift+I`) and use:
 /security       Scan for vulnerabilities
 /tdd            Help me write tests for [function]
 /architect      Design architecture for [system]
-/diagram-suite  Generate full UML diagram baseline
-/diagram-update Update existing diagrams without reset
+/diagram-suite  Generate full Mermaid UML diagram baseline
+/diagram-update Update existing Mermaid diagrams without reset
 /diagram-pdf    Export and package the final PDF book
 ```
+
+Diagram commands use Mermaid .mmd sources under diagrams/src and package them to PDF via npm run diagrams:book.
 
 ### With Selection
 
@@ -70,17 +72,17 @@ Add to `keybindings.json` (`Cmd+K Cmd+S` → Open JSON):
 
 ## Available Agents
 
-| Command           | Purpose                                          |
-| ----------------- | ------------------------------------------------ |
-| `/code-review`    | Review code quality, security, bugs              |
-| `/plan`           | Create implementation plans                      |
-| `/build-fix`      | Fix TypeScript/build errors                      |
-| `/security`       | Security vulnerability scan                      |
-| `/tdd`            | Test-driven development                          |
-| `/architect`      | System design decisions                          |
-| `/diagram-suite`  | Generate Class/Object/Use Case/Activity/Sequence |
-| `/diagram-update` | Update existing diagram files safely             |
-| `/diagram-pdf`    | Build diagram PDF package                        |
+| Command           | Purpose                                                     |
+| ----------------- | ----------------------------------------------------------- |
+| `/code-review`    | Review code quality, security, bugs                         |
+| `/plan`           | Create implementation plans                                 |
+| `/build-fix`      | Fix TypeScript/build errors                                 |
+| `/security`       | Security vulnerability scan                                 |
+| `/tdd`            | Test-driven development                                     |
+| `/architect`      | System design decisions                                     |
+| `/diagram-suite`  | Generate Class/Object/Use Case/Activity/Sequence in Mermaid |
+| `/diagram-update` | Update existing Mermaid diagram files safely                |
+| `/diagram-pdf`    | Build diagram PDF package                                   |
 
 ## File Structure
 

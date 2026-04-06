@@ -1,0 +1,42 @@
+flowchart LR
+  subgraph Clients
+    BrowserA["clientA:WebApp<br/>route=/app/discover"]
+    BrowserB["clientB:WebApp<br/>route=/app/matches"]
+  end
+
+  subgraph DomainInstances
+    UserA["u_101:User<br/>email=a@example.com"]
+    UserB["u_204:User<br/>email=b@example.com"]
+    ProfileA["p_101:Profile<br/>city=Toronto"]
+    ProfileB["p_204:Profile<br/>city=Toronto"]
+    PrefA["pref_101:Preference<br/>budget=1200-1800"]
+    PrefB["pref_204:Preference<br/>budget=1000-1700"]
+    SwipeA["sw_888:Swipe<br/>A->B LIKE"]
+    SwipeB["sw_889:Swipe<br/>B->A LIKE"]
+    MatchAB["m_77:Match<br/>score=0.86"]
+    ConvAB["c_77:Conversation"]
+    Msg1["msg_9001:Message<br/>sender=u_101"]
+    Msg2["msg_9002:Message<br/>sender=u_204"]
+  end
+
+  subgraph InfraInstances
+    ApiReq["req_501:POST /discovery/swipe"]
+    SocketRoom["room_match_77:SocketRoom"]
+  end
+
+  BrowserA --> ApiReq
+  ApiReq --> UserA
+  UserA --> ProfileA
+  UserA --> PrefA
+  UserB --> ProfileB
+  UserB --> PrefB
+  UserA --> SwipeA
+  UserB --> SwipeB
+  SwipeA --> MatchAB
+  SwipeB --> MatchAB
+  MatchAB --> ConvAB
+  ConvAB --> Msg1
+  ConvAB --> Msg2
+  BrowserA --> SocketRoom
+  BrowserB --> SocketRoom
+  SocketRoom --> ConvAB

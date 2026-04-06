@@ -77,9 +77,39 @@
 			"problemMatcher": "$tsc"
 		},
 		{
+			"label": "Diagram Bootstrap (Mermaid)",
+			"type": "shell",
+			"command": "npm run diagrams:bootstrap",
+			"group": "build",
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": []
+		},
+		{
 			"label": "Diagram Validate",
 			"type": "shell",
 			"command": "npm run diagrams:validate",
+			"group": "build",
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Diagram Quality Gate",
+			"type": "shell",
+			"command": "npm run diagrams:quality",
+			"group": "build",
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Diagram Preflight Gate",
+			"type": "shell",
+			"command": "npm run diagrams:preflight",
 			"group": "build",
 			"presentation": {
 				"reveal": "always"
@@ -99,7 +129,8 @@
 		{
 			"label": "Diagram Full Workflow",
 			"dependsOn": [
-				"Diagram Validate",
+				"Diagram Bootstrap (Mermaid)",
+				"Diagram Preflight Gate",
 				"Diagram Book (PDF)"
 			],
 			"dependsOrder": "sequence",

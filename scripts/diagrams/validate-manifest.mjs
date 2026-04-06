@@ -82,7 +82,7 @@ for (const type of REQUIRED_BASE_TYPES) {
 
 if (missingRequiredSources.length > 0) {
     fail(
-        `Missing required draw.io source files: ${missingRequiredSources.join(", ")}. Run /diagram-suite first.`
+        `Missing required Mermaid source files: ${missingRequiredSources.join(", ")}. Run /diagram-suite first.`
     );
 }
 

@@ -6,17 +6,17 @@ Ready-to-use prompt files for GitHub Copilot in VS Code.
 
 9 custom agents that work as `/commands` in Copilot Chat:
 
-| Command           | Purpose                                 |
-| ----------------- | --------------------------------------- |
-| `/code-review`    | Review code for bugs, security, quality |
-| `/plan`           | Create implementation plans             |
-| `/build-fix`      | Fix TypeScript/build errors             |
-| `/security`       | Security vulnerability scan             |
-| `/tdd`            | Test-driven development                 |
-| `/architect`      | System design decisions                 |
-| `/diagram-suite`  | Generate full UML diagram baseline      |
-| `/diagram-update` | Update existing diagrams safely         |
-| `/diagram-pdf`    | Export and package final diagram PDF    |
+| Command           | Purpose                                    |
+| ----------------- | ------------------------------------------ |
+| `/code-review`    | Review code for bugs, security, quality    |
+| `/plan`           | Create implementation plans                |
+| `/build-fix`      | Fix TypeScript/build errors                |
+| `/security`       | Security vulnerability scan                |
+| `/tdd`            | Test-driven development                    |
+| `/architect`      | System design decisions                    |
+| `/diagram-suite`  | Generate full Mermaid UML diagram baseline |
+| `/diagram-update` | Update existing Mermaid diagrams safely    |
+| `/diagram-pdf`    | Export and package final diagram PDF       |
 
 ## Setup (5 minutes)
 
@@ -100,7 +100,11 @@ Diagram automation is provided out of the box:
 
 - `diagrams/manifest.json` defines required UML/ERD outputs.
 - `diagrams/PROJECT_CONTEXT.md` captures project context for generation.
+- `diagrams/src/*.mmd` stores Mermaid diagram source files.
+- `npm run diagrams:bootstrap` creates starter Mermaid files for missing sources.
 - `npm run diagrams:validate` validates manifest and required source coverage.
+- `npm run diagrams:preflight` enforces mandatory per-diagram-type fail-fast checks.
+- `npm run diagrams:quality` enforces depth/alignment quality heuristics.
 - `npm run diagrams:book` exports PDFs and builds `diagrams/out/diagram-book.pdf`.
 - `diagram-workstation/` contains reusable templates and workflow blueprint.
 

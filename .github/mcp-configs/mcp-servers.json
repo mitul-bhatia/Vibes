@@ -79,6 +79,11 @@
       "args": ["-y", "@upstash/context7-mcp@latest"],
       "description": "Live documentation lookup — use with /docs command and documentation-lookup skill (resolve-library-id, query-docs)."
     },
+    "mcp-mermaid": {
+      "command": "npx",
+      "args": ["-y", "mcp-mermaid"],
+      "description": "Mermaid diagram generation and validation MCP server for flowcharts, sequence, class, ER, and architecture visuals."
+    },
     "magic": {
       "command": "npx",
       "args": ["-y", "@magicuidesign/mcp@latest"],

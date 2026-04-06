@@ -2,14 +2,18 @@
   "name": "vibes-diagram-workstation",
   "version": "1.0.0",
   "private": true,
-  "description": "Professional draw.io UML workflow and PDF packaging",
+  "description": "Professional Mermaid UML workflow and PDF packaging",
   "type": "module",
   "scripts": {
+    "diagrams:bootstrap": "node scripts/diagrams/bootstrap-mermaid.mjs",
     "diagrams:validate": "node scripts/diagrams/validate-manifest.mjs",
+    "diagrams:preflight": "npm run diagrams:validate && node scripts/diagrams/preflight-gate.mjs && npm run diagrams:quality",
+    "diagrams:quality": "node scripts/diagrams/quality-gate.mjs",
     "diagrams:validate:manifest-only": "node scripts/diagrams/validate-manifest.mjs diagrams/manifest.json --allow-missing-sources",
-    "diagrams:book": "npm run diagrams:validate && node scripts/diagrams/build-diagram-book.mjs"
+    "diagrams:book": "npm run diagrams:preflight && node scripts/diagrams/build-diagram-book.mjs"
   },
   "dependencies": {
+    "@mermaid-js/mermaid-cli": "^11.12.0",
     "pdf-lib": "^1.17.1"
   }
 }
