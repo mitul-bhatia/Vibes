@@ -1,115 +1,328 @@
 classDiagram
   direction LR
 
+  %% Frontend layer
+  class RuntimeConfig {
+    +apiBaseUrl: string
+    +socketUrl: string
+    +cloudinaryCloudName: string
+    +cloudinaryUploadPreset: string
+  }
+
+  class AuthProvider {
+    +signIn(email, password) Promise~void~
+    +signUp(name, email, password) Promise~void~
+    +signInWithGoogle(source) void
+    +completeGoogleSignIn(exchangeCode) Promise~void~
+    +signOut() void
+  }
+
+  class ProtectedRoute {
+    +allowIncompleteProfile: boolean
+    +render(children) JSX
+  }
+
+  class FetchRequestStrategy {
+    +send(request) Promise~T~
+  }
+
+  class HttpClientAdapter {
+    +request(config) Promise~T~
+  }
+
+  class DiscoveryPage {
+    +getFeed() Promise~Candidate[]~
+    +handleSwipe(toUserId, action) Promise~void~
+  }
+
+  class ChatPage {
+    +joinRoom(conversationId) void
+    +sendMessage(payload) void
+    +onMessage(payload) void
+  }
+
+  %% API boundary and middleware
+  class JwtMiddleware {
+    +checkJwt(req,res,next) void
+    +attachUserId(req,res,next) void
+  }
+
+  class ControllerChainMiddleware {
+    +requireAuthenticatedUser(body) RequestHandler
+    +withAuthenticatedController(handler, options) Handler[]
+    +domainErrorToHttp(error,req,res,next) void
+  }
+
+  class AuthController {
+    +signUp(req,res) Promise~void~
+    +login(req,res) Promise~void~
+    +googleStart(req,res) Promise~void~
+    +googleCallback(req,res) Promise~void~
+    +googleExchange(req,res) Promise~void~
+  }
+
+  class ProfilesController {
+    +getMyProfile(req,res) Promise~void~
+    +saveProfile(req,res) Promise~void~
+  }
+
+  class PreferencesController {
+    +getMyPreferences(req,res) Promise~void~
+    +saveMyPreferences(req,res) Promise~void~
+  }
+
+  class DiscoveryController {
+    +getFeed(req,res) Promise~void~
+    +swipe(req,res) Promise~void~
+  }
+
+  class MatchesController {
+    +getMyMatches(req,res) Promise~void~
+    +connectCompatibility(req,res) Promise~void~
+  }
+
+  class ChatController {
+    +Openchat(req,res) Promise~void~
+  }
+
+  %% Domain services and abstractions
+  class UpsertByUserIdService {
+    <<abstract>>
+    #findByUserId(userId) Promise~T|null~
+    #updateByUserId(userId, data) Promise~T~
+    #mapCreateData(userId, data) CreateData
+    #createByUserId(data) Promise~T~
+    +upsert(userId, data) Promise~T~
+  }
+
+  class ProfileUpsertService {
+    +findByUserId(userId) Promise~Profile|null~
+    +updateByUserId(userId, data) Promise~Profile~
+    +mapCreateData(userId, data) ProfileCreateData
+    +createByUserId(data) Promise~Profile~
+  }
+
+  class PreferenceUpsertService {
+    +findByUserId(userId) Promise~Preference|null~
+    +updateByUserId(userId, data) Promise~Preference~
+    +mapCreateData(userId, data) PreferenceCreateData
+    +createByUserId(data) Promise~Preference~
+  }
+
+  class AuthService {
+    +signUpWithEmail(credentials) Promise~AuthSession~
+    +signInWithEmail(credentials) Promise~AuthSession~
+    +getGoogleAuthorizationUrl(source,redirectOrigin) string
+    +completeGoogleAuthorization(code,state) Promise~ExchangeResult~
+    +exchangeGoogleCode(exchangeCode) Promise~AuthSession~
+  }
+
+  class DiscoveryService {
+    +getDiscoveryFeed(userId) Promise~Candidate[]~
+    +swipeUser(fromUserId,toUserId,action) Promise~SwipeResult~
+  }
+
+  class MatchService {
+    +findMatchesForUser(userId) Promise~RankedMatch[]~
+    +assertOnboardingCompleted(userId) Promise~void~
+  }
+
+  class MatchesService {
+    +checkAndCreateMatch(fromUserId,toUserId) Promise~MatchCheckResult~
+    +getMyMatches(userId) Promise~EnrichedMatch[]~
+  }
+
+  class ChatService {
+    +getOrCreateConversation(matchId) Promise~Conversation~
+    +getMessages(conversationId) Promise~Message[]~
+    +sendMessage(conversationId,senderId,content) Promise~Message~
+    +validateUserInMatch(matchId,userId) Promise~boolean~
+  }
+
+  class ChatSocketGateway {
+    +registerChatSocket(io) void
+  }
+
+  class EligibilityStrategy {
+    <<interface>>
+    +isEligible(userA, userB) boolean
+  }
+
+  class ScoringStrategy {
+    <<interface>>
+    +calculateScore(prefA, prefB) number
+  }
+
+  class DefaultEligibilityStrategy {
+    +isEligible(userA, userB) boolean
+  }
+
+  class DefaultScoringStrategy {
+    +calculateScore(prefA, prefB) number
+  }
+
+  %% Socket contracts
+  class ClientToServerEvents {
+    <<interface>>
+    +sendMessage(payload)
+    +joinRoom(roomId)
+    +send_message(payload)
+    +join(conversationId)
+  }
+
+  class ServerToClientEvents {
+    <<interface>>
+    +message(payload)
+    +new_message(payload)
+    +userOnline(userId)
+    +userOffline(userId)
+  }
+
+  class SendMessagePayload {
+    +conversationId: string
+    +senderId: string
+    +content: string
+  }
+
+  class MessagePayload {
+    +id: string
+    +senderId: string
+    +content: string
+    +createdAt: string
+    +timestamp: string
+  }
+
+  %% Persistence and entities
+  class PrismaClient {
+    +user
+    +profile
+    +preference
+    +swipe
+    +match
+    +conversation
+    +message
+  }
+
   class User {
-    +id: UUID
+    +id: ObjectId
     +email: string
-    +passwordHash: string
-    +authProvider: AuthProvider
+    +passwordHash: string?
+    +googleId: string?
+    +name: string?
+    +picture: string?
     +createdAt: DateTime
+    +updatedAt: DateTime
   }
 
   class Profile {
-    +id: UUID
-    +userId: UUID
-    +displayName: string
+    +id: ObjectId
+    +userId: ObjectId
+    +name: string?
+    +age: int?
+    +gender: string?
+    +onboardingCompleted: boolean
     +city: string
-    +bio: string
-    +onboardingComplete: boolean
+    +hasRoom: boolean
+    +occupation: string?
   }
 
   class Preference {
-    +id: UUID
-    +userId: UUID
-    +budgetMin: number
-    +budgetMax: number
-    +moveInDate: Date
-    +smokingPreference: string
+    +id: ObjectId
+    +userId: ObjectId
+    +genderPreference: string
+    +minBudget: int
+    +maxBudget: int
+    +cleanliness: int
+    +sleepSchedule: int
+    +weightCleanliness: int
+    +weightSleep: int
+    +weightHabits: int
+    +weightSocial: int
   }
 
   class Swipe {
-    +id: UUID
-    +fromUserId: UUID
-    +toUserId: UUID
-    +direction: SwipeDirection
+    +id: ObjectId
+    +fromUserId: ObjectId
+    +toUserId: ObjectId
+    +action: string
     +createdAt: DateTime
   }
 
   class Match {
-    +id: UUID
-    +userAId: UUID
-    +userBId: UUID
-    +compatibilityScore: number
+    +id: ObjectId
+    +userAId: ObjectId
+    +userBId: ObjectId
     +createdAt: DateTime
   }
 
   class Conversation {
-    +id: UUID
-    +matchId: UUID
+    +id: ObjectId
+    +matchId: ObjectId
     +createdAt: DateTime
   }
 
   class Message {
-    +id: UUID
-    +conversationId: UUID
-    +senderId: UUID
-    +body: string
-    +sentAt: DateTime
+    +id: ObjectId
+    +conversationId: ObjectId
+    +senderId: ObjectId
+    +content: string
+    +createdAt: DateTime
   }
 
-  class AuthService {
-    +signup(input): AuthTokens
-    +login(input): AuthTokens
-    +exchangeGoogleCode(code): AuthTokens
-  }
+  %% Frontend dependencies
+  AuthProvider ..> AuthService : authenticates through transport
+  ProtectedRoute ..> AuthProvider : reads auth session
+  DiscoveryPage ..> HttpClientAdapter : calls discovery endpoints
+  ChatPage ..> ClientToServerEvents : emits socket events
+  ChatPage ..> ServerToClientEvents : subscribes message events
+  HttpClientAdapter *-- FetchRequestStrategy : delegates HTTP I/O
+  HttpClientAdapter ..> RuntimeConfig : reads base URL
 
-  class DiscoveryService {
-    +getFeed(userId): Candidate[]
-    +recordSwipe(userId, targetId, direction): SwipeResult
-  }
+  %% API boundary dependencies
+  AuthController ..> AuthService : delegates auth flow
+  ProfilesController ..> ProfileUpsertService : delegates profile upsert
+  PreferencesController ..> PreferenceUpsertService : delegates preference upsert
+  DiscoveryController ..> DiscoveryService : delegates feed/swipe
+  MatchesController ..> MatchesService : delegates match queries
+  MatchesController ..> DiscoveryService : delegates connect action
+  ChatController ..> ChatService : delegates conversation load
+  ControllerChainMiddleware ..> ProfilesController : wraps authenticated handlers
+  ControllerChainMiddleware ..> PreferencesController : wraps authenticated handlers
+  JwtMiddleware ..> DiscoveryController : guards protected routes
+  JwtMiddleware ..> MatchesController : guards protected routes
+  JwtMiddleware ..> ChatController : guards protected routes
 
-  class MatchingService {
-    +computeCompatibility(userA, userB): number
-    +openMatchIfMutual(userA, userB): Match?
-  }
+  %% Domain abstractions and strategy/template structure
+  ProfileUpsertService --|> UpsertByUserIdService : template specialization
+  PreferenceUpsertService --|> UpsertByUserIdService : template specialization
+  DefaultEligibilityStrategy ..|> EligibilityStrategy : strategy implementation
+  DefaultScoringStrategy ..|> ScoringStrategy : strategy implementation
+  MatchService *-- DefaultEligibilityStrategy : evaluates eligibility
+  MatchService *-- DefaultScoringStrategy : computes compatibility score
+  DiscoveryService ..> MatchService : ranking + onboarding guard
+  MatchesService ..> MatchService : compatibility lookups
+  ChatSocketGateway ..> ChatService : persists outbound chat messages
+  ChatSocketGateway ..> ClientToServerEvents : consumes client contract
+  ChatSocketGateway ..> ServerToClientEvents : emits server contract
+  ChatSocketGateway ..> SendMessagePayload : validates payload shape
+  ChatSocketGateway ..> MessagePayload : emits normalized payload
 
-  class ChatService {
-    +openConversation(matchId): Conversation
-    +sendMessage(matchId, senderId, body): Message
-  }
+  %% Prisma-backed persistence dependencies
+  AuthService ..> PrismaClient : reads/writes user records
+  ProfileUpsertService ..> PrismaClient : reads/writes profile records
+  PreferenceUpsertService ..> PrismaClient : reads/writes preference records
+  DiscoveryService ..> PrismaClient : reads swipes/profiles/preferences
+  MatchService ..> PrismaClient : reads profiles/preferences
+  MatchesService ..> PrismaClient : reads matches/conversations
+  ChatService ..> PrismaClient : reads/writes conversations/messages
 
-  class UserRepository {
-    +findById(userId): User
-    +findByEmail(email): User?
-    +save(user): User
-  }
-
-  class SwipeRepository {
-    +saveSwipe(swipe): Swipe
-    +hasMutualLike(userA, userB): boolean
-  }
-
-  class MatchRepository {
-    +createMatch(userA, userB, score): Match
-    +findByUser(userId): Match[]
-  }
-
-  class ConversationRepository {
-    +findByMatch(matchId): Conversation?
-    +create(matchId): Conversation
-    +appendMessage(message): Message
-  }
-
-  User "1" --> "1" Profile : owns
-  User "1" --> "1" Preference : configures
+  %% Domain cardinality
+  User "1" --> "0..1" Profile : owns
+  User "1" --> "0..1" Preference : sets
   User "1" --> "0..*" Swipe : creates
+  Swipe --> User : fromUserId/toUserId
   User "1" --> "0..*" Match : participates
+  Match --> User : userAId/userBId
   Match "1" --> "1" Conversation : opens
   Conversation "1" --> "0..*" Message : contains
-
-  AuthService ..> UserRepository : authenticates via
-  DiscoveryService ..> SwipeRepository : persists
-  DiscoveryService ..> MatchingService : delegates
-  MatchingService ..> MatchRepository : creates/queries
-  ChatService ..> MatchRepository : authorizes
-  ChatService ..> ConversationRepository : persists
+  Message --> User : senderId

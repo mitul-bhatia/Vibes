@@ -1,50 +1,83 @@
 flowchart LR
   subgraph Actors
     Guest((Guest))
-    Member((Authenticated User))
-    Admin((Support/Admin))
-    Google((Google OAuth))
+    Seeker((Seeker))
+    RoomOwner((Room Owner))
+    SupportAdmin((Support Admin))
+    IdentityProvider((Identity Provider))
+    MediaService((Media Service))
   end
 
-  subgraph FlatelySystem[Flately Platform Use Cases]
-    UC1([Register Account])
-    UC2([Login with Email])
-    UC3([Login with Google])
-    UC4([Exchange OAuth Code])
-    UC5([Complete Onboarding])
-    UC6([Update Profile])
-    UC7([Set Lifestyle Preferences])
-    UC8([View Discovery Feed])
-    UC9([Like Candidate])
-    UC10([Pass Candidate])
-    UC11([View Matches])
-    UC12([Open Match Conversation])
-    UC13([Send Real-time Message])
-    UC14([Request Upload Signature])
-    UC15([Moderate User Report])
+  subgraph System[Flately Platform Use Cases]
+    UC1([Start Questionnaire])
+    UC2([Sign Up with Email])
+    UC3([Sign In with Email])
+    UC4([Continue with Google])
+    UC5([Exchange OAuth Code])
+    UC6([Restore Session])
+
+    UC7([Complete Onboarding])
+    UC8([Upload Profile Photo])
+    UC9([Set Lifestyle Preferences])
+    UC10([Edit Profile and Preferences])
+
+    UC11([View Discovery Feed])
+    UC12([Swipe Candidate])
+    UC13([View Matches])
+    UC14([Open Match Chat])
+    UC15([Send Real-Time Message])
+
+    UC16([Report User])
+    UC17([Moderate Reports])
+    UC18([Generate Upload Signature])
+
+    UC19([Recover from Session Expiry])
+    UC20([Retry Failed Action])
   end
 
   Guest --> UC1
   Guest --> UC2
   Guest --> UC3
-  Google --> UC4
+  Guest --> UC4
 
-  Member --> UC5
-  Member --> UC6
-  Member --> UC7
-  Member --> UC8
-  Member --> UC9
-  Member --> UC10
-  Member --> UC11
-  Member --> UC12
-  Member --> UC13
-  Member --> UC14
+  Seeker --> UC6
+  Seeker --> UC7
+  Seeker --> UC10
+  Seeker --> UC11
+  Seeker --> UC12
+  Seeker --> UC13
+  Seeker --> UC14
+  Seeker --> UC15
+  Seeker --> UC16
 
-  Admin --> UC15
+  RoomOwner --> UC6
+  RoomOwner --> UC7
+  RoomOwner --> UC10
+  RoomOwner --> UC11
+  RoomOwner --> UC12
+  RoomOwner --> UC13
+  RoomOwner --> UC14
+  RoomOwner --> UC15
 
-  UC3 --> UC4
-  UC8 --> UC9
-  UC8 --> UC10
-  UC9 --> UC11
-  UC11 --> UC12
-  UC12 --> UC13
+  SupportAdmin --> UC17
+  IdentityProvider --> UC4
+  IdentityProvider --> UC5
+  MediaService --> UC18
+
+  UC4 -->|includes| UC5
+  UC7 -->|includes| UC8
+  UC7 -->|includes| UC9
+  UC8 -->|includes| UC18
+
+  UC11 -->|includes| UC12
+  UC13 -->|extends| UC11
+  UC14 -->|extends| UC13
+  UC15 -->|includes| UC14
+
+  UC10 -->|extends| UC7
+  UC16 -->|extends| UC14
+  UC17 -->|includes| UC16
+
+  UC6 -->|extends| UC19
+  UC11 -->|extends| UC20
+  UC14 -->|extends| UC20

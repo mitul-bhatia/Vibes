@@ -1,44 +1,27 @@
 sequenceDiagram
   autonumber
   participant U as User
-  participant FE as Frontend SPA
-  participant API as Express API
-  participant AUTH as Auth Service
-  participant DISC as Discovery Service
-  participant MATCH as Matching Service
-  participant DB as Prisma/MongoDB
-  participant WS as Socket.IO Gateway
+  participant FE as Frontend
+  participant API as Backend API
+  participant SVC as Matching Service
+  participant DB as Database
 
-  U->>FE: Open app and swipe candidate
-  FE->>API: GET /profiles/me + /preferences/me (Bearer JWT)
-  API->>AUTH: validateToken(jwt)
-  AUTH-->>API: tokenValid(userId)
-  API->>DB: loadProfileAndPreference(userId)
-  DB-->>API: profile + preference
-  API-->>FE: bootstrap payload
+  U->>FE: Submit swipe action
+  FE->>API: POST /discovery/swipe
+  API->>SVC: evaluateSwipe(userId, targetId, direction)
+  SVC->>DB: saveSwipe()
+  DB-->>SVC: swipeSaved
+  SVC->>DB: checkMutualLike()
+  DB-->>SVC: mutualLike
 
-  FE->>API: POST /discovery/swipe {targetId, direction:LIKE}
-  API->>DISC: recordSwipe(userId, targetId, LIKE)
-  DISC->>DB: insertSwipe(fromUserId,toUserId)
-  DB-->>DISC: swipeCreated
-  DISC->>MATCH: checkMutualLike(userId, targetId)
-  MATCH->>DB: query reciprocal LIKE
-  DB-->>MATCH: mutual=true|false
-
-  alt mutual like = false
-    MATCH-->>DISC: noMatch
-    DISC-->>API: swipeAccepted(noMatch)
-    API-->>FE: 200 {matched:false}
-  else mutual like = true
-    MATCH->>DB: create Match + Conversation
-    DB-->>MATCH: matchId + conversationId
-    MATCH-->>DISC: matchCreated
-    DISC-->>API: swipeAccepted(match)
-    API-->>FE: 200 {matched:true, matchId}
-    FE->>WS: joinRoom(matchId)
-    U->>FE: Send first chat message
-    FE->>WS: sendMessage(matchId, body)
-    WS->>DB: persistMessage(matchId, senderId, body)
-    DB-->>WS: messageSaved
-    WS-->>FE: new_message event
+  alt mutualLike is true
+    SVC->>DB: createMatchAndConversation()
+    DB-->>SVC: matchCreated
+    SVC-->>API: swipeResult(matched=true)
+    API-->>FE: 200 match payload
+    FE-->>U: show match modal
+  else mutualLike is false
+    SVC-->>API: swipeResult(matched=false)
+    API-->>FE: 200 continue payload
+    FE-->>U: keep browsing cards
   end

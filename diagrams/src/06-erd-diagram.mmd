@@ -1,34 +1,40 @@
 erDiagram
+  USER ||--|| PROFILE : has
+  USER ||--|| PREFERENCE : has
+  USER ||--o{ SWIPE : creates
+  USER ||--o{ MATCH : participates
+  MATCH ||--|| CONVERSATION : opens
+  CONVERSATION ||--o{ MESSAGE : contains
+
   USER {
     string id PK
-    string email
-    string passwordHash
-    string authProvider
+    string email UK
+    string name
     datetime createdAt
   }
 
   PROFILE {
     string id PK
-    string userId FK
+    string userId FK,UK
     string displayName
     string city
-    string bio
-    boolean onboardingComplete
+    datetime updatedAt
   }
 
   PREFERENCE {
     string id PK
-    string userId FK
+    string userId FK,UK
     int budgetMin
     int budgetMax
-    date moveInDate
-    string smokingPreference
+    string moveInMonth
+    datetime updatedAt
   }
 
   SWIPE {
     string id PK
     string fromUserId FK
     string toUserId FK
+    string pairKey UK
     string direction
     datetime createdAt
   }
@@ -43,21 +49,14 @@ erDiagram
 
   CONVERSATION {
     string id PK
-    string matchId FK
+    string matchId FK,UK
     datetime createdAt
   }
 
   MESSAGE {
     string id PK
     string conversationId FK
-    string senderId FK
+    string senderUserId FK
     string body
-    datetime sentAt
+    datetime createdAt
   }
-
-  USER ||--|| PROFILE : owns
-  USER ||--|| PREFERENCE : configures
-  USER ||--o{ SWIPE : initiates
-  USER ||--o{ MATCH : participates
-  MATCH ||--|| CONVERSATION : opens
-  CONVERSATION ||--o{ MESSAGE : stores
