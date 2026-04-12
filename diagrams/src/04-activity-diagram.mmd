@@ -1,14 +1,68 @@
 flowchart TD
-  Start([Start]) --> Auth{Authenticated?}
-  Auth -- No --> Login[Login or Sign Up]
-  Login --> Profile[Complete Profile + Preferences]
-  Auth -- Yes --> ProfileGate{Onboarding Complete?}
-  ProfileGate -- No --> Profile
-  ProfileGate -- Yes --> Feed[Load Discovery Feed]
-  Feed --> Swipe{Like Candidate?}
-  Swipe -- Yes --> MatchCheck{Mutual Like?}
-  MatchCheck -- Yes --> Match[Create Match + Conversation]
-  Match --> Chat[Open Chat]
-  MatchCheck -- No --> Feed
-  Swipe -- No --> Feed
-  Chat --> End([End])
+  Start([Start Session]) --> Landing[Open Landing Page /]
+  Landing --> Questionnaire{Start Questionnaire?}
+  Questionnaire -- Yes --> StartQ[Open /start and save draft answers]
+  Questionnaire -- No --> AuthChoice
+  StartQ --> AuthChoice{Choose Authentication Method}
+
+  AuthChoice -- Sign Up Email --> Signup[POST /auth/signup]
+  AuthChoice -- Sign In Email --> Signin[POST /auth/login]
+  AuthChoice -- Continue with Google --> GoogleStart[GET /auth/google/start]
+
+  GoogleStart --> GoogleCallback[GET /auth/google/callback]
+  GoogleCallback --> GoogleExchange[GET /auth/google/exchange]
+
+  Signup --> AuthOk{Auth Success?}
+  Signin --> AuthOk
+  GoogleExchange --> AuthOk
+
+  AuthOk -- No --> AuthError[Show auth error and keep form values]
+  AuthError --> AuthChoice
+  AuthOk -- Yes --> PersistSession[Persist JWT session]
+
+  PersistSession --> Bootstrap[Load /profiles/me via AuthBootstrap]
+  Bootstrap --> BootstrapOk{Profile Bootstrap Success?}
+  BootstrapOk -- No --> BootstrapRetry[Show retry state]
+  BootstrapRetry --> Bootstrap
+  BootstrapOk -- Yes --> GuardCheck{Onboarding Completed?}
+
+  GuardCheck -- No --> Onboarding[Open /app/onboarding]
+  Onboarding --> PhotoRule{At least one photo selected?}
+  PhotoRule -- No --> PhotoError[Show photo required validation]
+  PhotoError --> Onboarding
+  PhotoRule -- Yes --> SaveOnboarding[POST /profiles/me and POST /preferences/me]
+  SaveOnboarding --> OnboardingSaved{Save Success?}
+  OnboardingSaved -- No --> OnboardingRetry[Keep form state and show API errors]
+  OnboardingRetry --> Onboarding
+  OnboardingSaved -- Yes --> Dashboard[Open /app dashboard]
+
+  GuardCheck -- Yes --> Dashboard
+  Dashboard --> Discover[Open /app/discover]
+  Discover --> FeedLoad[GET /discovery/feed]
+  FeedLoad --> FeedOk{Feed Load Success?}
+  FeedOk -- No --> FeedRetry[Show retry action]
+  FeedRetry --> FeedLoad
+  FeedOk -- Yes --> SwipeChoice{Swipe Action}
+
+  SwipeChoice -- Pass --> SwipePass[POST /discovery/swipe action=dislike]
+  SwipePass --> Discover
+
+  SwipeChoice -- Like --> SwipeLike[POST /discovery/swipe action=like]
+  SwipeLike --> MatchResult{Mutual Match Created?}
+  MatchResult -- No --> Discover
+  MatchResult -- Yes --> Matches[Open /app/matches and GET /matches/me]
+
+  Matches --> ChatOpen[Open /app/chat/:matchId and GET /chat/:matchId]
+  ChatOpen --> ChatReady{Conversation Available?}
+  ChatReady -- No --> ChatRetry[Show retry failed action]
+  ChatRetry --> ChatOpen
+  ChatReady -- Yes --> SendMessage[Send real-time message via socket]
+  SendMessage --> ContinueChat{Continue chatting?}
+  ContinueChat -- Yes --> SendMessage
+  ContinueChat -- No --> End([End Session])
+
+  Discover --> SessionCheck{Session Expired 401?}
+  SessionCheck -- Yes --> SessionRecover[Redirect /login?reason=session-expired]
+  SessionRecover --> LoginResume[Open login page and resume auth]
+  LoginResume --> AuthChoice
+  SessionCheck -- No --> SwipeChoice

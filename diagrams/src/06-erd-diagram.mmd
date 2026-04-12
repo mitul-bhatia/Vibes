@@ -1,32 +1,64 @@
 erDiagram
-  USER ||--|| PROFILE : has
-  USER ||--|| PREFERENCE : has
-  USER ||--o{ SWIPE : creates
-  USER ||--o{ MATCH : participates
-  MATCH ||--|| CONVERSATION : opens
-  CONVERSATION ||--o{ MESSAGE : contains
+  USER ||--o| PROFILE : owns_profile
+  USER ||--o| PREFERENCE : sets_preferences
+  USER ||--o{ SWIPE : creates_swipe
+  USER ||--o{ SWIPE : receives_swipe
+  USER ||--o{ MATCH : participates_as_userA
+  USER ||--o{ MATCH : participates_as_userB
+  MATCH ||--|| CONVERSATION : has_conversation
+  CONVERSATION ||--o{ MESSAGE : stores_messages
+  USER ||--o{ MESSAGE : authors_messages
 
   USER {
     string id PK
     string email UK
+    string passwordHash
+    string googleId
     string name
+    string picture
     datetime createdAt
+    datetime updatedAt
   }
 
   PROFILE {
     string id PK
     string userId FK,UK
-    string displayName
+    string name
+    int age
+    string gender
+    string bio
+    string photos "array of URLs"
     string city
+    bool hasRoom
+    string occupation
+    string sleepSchedule
+    int noiseLevel
+    string guestPolicy
+    string smoking
+    string pets
+    bool onboardingCompleted
+    datetime createdAt
     datetime updatedAt
   }
 
   PREFERENCE {
     string id PK
     string userId FK,UK
-    int budgetMin
-    int budgetMax
-    string moveInMonth
+    string genderPreference
+    int minBudget
+    int maxBudget
+    string city
+    int cleanliness
+    int sleepSchedule
+    bool smoking
+    bool drinking
+    bool pets
+    int socialLevel
+    int weightCleanliness
+    int weightSleep
+    int weightHabits
+    int weightSocial
+    datetime createdAt
     datetime updatedAt
   }
 
@@ -34,17 +66,17 @@ erDiagram
     string id PK
     string fromUserId FK
     string toUserId FK
-    string pairKey UK
-    string direction
+    string action
     datetime createdAt
+    string fromUserId_toUserId UK
   }
 
   MATCH {
     string id PK
     string userAId FK
     string userBId FK
-    float compatibilityScore
     datetime createdAt
+    string userAId_userBId UK
   }
 
   CONVERSATION {
@@ -56,7 +88,7 @@ erDiagram
   MESSAGE {
     string id PK
     string conversationId FK
-    string senderUserId FK
-    string body
+    string senderId FK
+    string content
     datetime createdAt
   }

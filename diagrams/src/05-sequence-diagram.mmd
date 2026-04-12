@@ -1,27 +1,123 @@
 sequenceDiagram
   autonumber
   participant U as User
-  participant FE as Frontend
-  participant API as Backend API
-  participant SVC as Matching Service
-  participant DB as Database
+  participant FE as Frontend (Router/Auth/Pages)
+  participant API as Express API Layer
+  participant SRV as Domain Services
+  participant DB as Prisma MongoDB
+  participant WS as Socket.IO Gateway
 
-  U->>FE: Submit swipe action
-  FE->>API: POST /discovery/swipe
-  API->>SVC: evaluateSwipe(userId, targetId, direction)
-  SVC->>DB: saveSwipe()
-  DB-->>SVC: swipeSaved
-  SVC->>DB: checkMutualLike()
-  DB-->>SVC: mutualLike
+  rect rgb(245, 248, 255)
+    U->>FE: Navigate to /app/discover
+    FE->>FE: ProtectedRoute checks auth status
 
-  alt mutualLike is true
-    SVC->>DB: createMatchAndConversation()
-    DB-->>SVC: matchCreated
-    SVC-->>API: swipeResult(matched=true)
-    API-->>FE: 200 match payload
-    FE-->>U: show match modal
-  else mutualLike is false
-    SVC-->>API: swipeResult(matched=false)
-    API-->>FE: 200 continue payload
-    FE-->>U: keep browsing cards
+    alt unauthenticated
+      FE-->>U: Redirect to /login
+      U->>FE: Submit login/signup/google callback
+      FE->>API: POST /auth/login | /auth/signup | GET /auth/google/exchange
+      API-->>FE: 200 AuthSession(accessToken)
+      FE->>FE: Persist session + set token getter
+      FE->>API: GET /profiles/me (AuthBootstrap)
+      API->>API: checkJwt + attachUserId
+      API-->>FE: 200 profile or null
+    else authenticated
+      FE->>FE: Await profile bootstrap completion
+    end
+
+    FE->>FE: ProtectedRoute checks onboardingCompleted
+    alt onboarding incomplete
+      FE-->>U: Redirect to /app/onboarding
+      FE->>API: POST /profiles/me
+      API-->>FE: 200 profile saved
+      FE->>API: POST /preferences/me
+      API-->>FE: 200 preferences saved
+      FE-->>U: Navigate to /app (dashboard)
+    else onboarding complete
+      FE-->>U: Discovery page rendered
+    end
   end
+
+  rect rgb(245, 255, 248)
+    U->>FE: Open Discovery tab
+    FE->>API: GET /discovery/feed
+    API->>API: checkJwt + requireAuthenticatedUser
+    API->>SRV: DiscoveryController.getFeed -> getDiscoveryFeed(userId)
+    SRV->>SRV: findMatchesForUser(userId)
+    SRV->>DB: read candidates, swipes, profiles, preferences
+    DB-->>SRV: ranked + enriched discovery candidates
+    SRV-->>API: DiscoveryProfile[]
+    API-->>FE: 200 feed payload
+  end
+
+  rect rgb(255, 248, 245)
+    U->>FE: Tap Connect or Pass
+    FE->>API: POST /discovery/swipe {toUserId, action}
+    API->>API: checkJwt + requireAuthenticatedUser
+    API->>SRV: DiscoveryController.swipe validates payload
+
+    alt invalid action payload
+      API-->>FE: 400 {error: Invalid action}
+      FE-->>U: Show request error
+    else valid action payload
+      API->>SRV: swipeUser(userId,toUserId,action)
+      SRV->>SRV: assertOnboardingCompleted(userId)
+
+      alt onboarding required error
+        SRV-->>API: throw ONBOARDING_REQUIRED
+        API-->>FE: 403 Onboarding completion is required
+        FE-->>U: Show onboarding-required error
+      else onboarding complete
+        SRV->>SRV: normalize action (superlike->like, skip->dislike)
+        SRV->>DB: swipe.upsert(fromUserId,toUserId,action)
+        DB-->>SRV: swipeSaved
+
+        alt normalized action is like
+          SRV->>SRV: checkAndCreateMatch(fromUserId,toUserId)
+          SRV->>DB: find reverse swipe (toUserId->fromUserId)
+          alt reverse like exists
+            SRV->>DB: match.upsert(userAId,userBId)
+            DB-->>SRV: matchCreated
+            SRV-->>API: matched=true
+          else reverse like missing
+            SRV-->>API: matched=false
+          end
+        else normalized action is dislike
+          SRV-->>API: skip match creation check
+        end
+
+        API-->>FE: 200 {success:true}
+        FE-->>U: Remove card + show notice
+      end
+    end
+  end
+
+  opt matched user opens chat
+    U->>FE: Open /app/chat/:matchId
+    FE->>API: GET /chat/:matchId
+    API->>API: checkJwt + attachUserId
+    API->>SRV: Openchat -> validateUserInMatch
+    SRV->>DB: match.findUnique(matchId)
+    alt user not in match
+      SRV-->>API: Forbidden
+      API-->>FE: 403 Forbidden
+    else user allowed
+      SRV->>DB: conversation.upsert(matchId)
+      SRV->>DB: messages.findMany(conversationId)
+      DB-->>SRV: conversation + messages
+      SRV-->>API: chat payload
+      API-->>FE: 200 chat payload
+      FE->>WS: joinRoom(conversationId)
+      U->>FE: Send message
+      FE->>WS: sendMessage(conversationId,senderId,content)
+    end
+
+    WS->>DB: message.create
+    DB-->>WS: messageSaved
+    WS-->>FE: message/new_message payload
+  end
+
+  opt token expires on protected request
+    API-->>FE: 401 Unauthorized
+    FE-->>U: Redirect /login?reason=session-expired
+  end
+

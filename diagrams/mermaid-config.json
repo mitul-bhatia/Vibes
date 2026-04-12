@@ -13,7 +13,7 @@
   },
   "flowchart": {
     "curve": "basis",
-    "htmlLabels": true,
+    "htmlLabels": false,
     "useMaxWidth": false
   },
   "sequence": {

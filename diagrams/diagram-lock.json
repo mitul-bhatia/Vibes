@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "lockedAt": "2026-04-07T14:47:31.789Z",
+  "lockSources": true,
+  "lockSvg": true,
+  "sources": {
+    "diagrams/src/01-class-diagram.mmd": "92673420845d5c77221c8ace3782e92733d33fc5a76ff7c3fe0e30845d4ced8f",
+    "diagrams/src/02-object-diagram.mmd": "666de2076c8e6ee8af773f406f6d502a81e9e73a7374e754326bebdefc1563c4",
+    "diagrams/src/03-use-case-diagram.mmd": "5b42fa25855a8d73caa0ac9eebdf277d342242fdf1924ddc77bb1e317df1d0de",
+    "diagrams/src/04-activity-diagram.mmd": "dc9ca71c589d81f0386c4b8f8f73e695f1c377deab0570e4f24d46d392d25713",
+    "diagrams/src/05-sequence-diagram.mmd": "7aa4240b49c6b012f62ef2689fa6b6701a25ebf6e88d6bfe4ae27408f353d961",
+    "diagrams/src/06-erd-diagram.mmd": "590280811a042f1b3cffcf633669a6d8ed365e60c4208823b5448572dfb2cc40"
+  },
+  "svgs": {
+    "diagrams/out/svg/01-class-diagram.svg": "79a63a0d9c3856ad5a4c3fbef7f9eb896a8b8d2fde8e309b7b0920cf9e310ed1",
+    "diagrams/out/svg/02-object-diagram.svg": "902b42dbf848fff2af5a7b0620a5016b0e2dac04d64cd03e6028e41d47b8ffb5",
+    "diagrams/out/svg/03-use-case-diagram.svg": "5448675ee83274ad27a7e7e1778491821e76a410970bbc97967d911ff42acc17",
+    "diagrams/out/svg/04-activity-diagram.svg": "4c4a71f9f14ad74ab8e4ff68048433be9e709635ae2fc4a392c8d84fe5079812",
+    "diagrams/out/svg/05-sequence-diagram.svg": "0c90e64e2e380503589ba7ecd6bd2abe240e124794a604ddda39899091ecb6ec",
+    "diagrams/out/svg/06-erd-diagram.svg": "6619f14e85bfa2ebad5e554545960d51b7ba142929fb47de71ce792c0ada10d3"
+  }
+}

@@ -3,9 +3,9 @@ flowchart LR
     Guest((Guest))
     Seeker((Seeker))
     RoomOwner((Room Owner))
-    SupportAdmin((Support Admin))
     IdentityProvider((Identity Provider))
     MediaService((Media Service))
+    PlatformOperator((Platform Operator))
   end
 
   subgraph System[Flately Platform Use Cases]
@@ -24,15 +24,16 @@ flowchart LR
     UC11([View Discovery Feed])
     UC12([Swipe Candidate])
     UC13([View Matches])
-    UC14([Open Match Chat])
-    UC15([Send Real-Time Message])
+    UC14([Connect with Candidate])
+    UC15([Open Match Chat])
+    UC16([Send Real-Time Message])
 
-    UC16([Report User])
-    UC17([Moderate Reports])
-    UC18([Generate Upload Signature])
+    UC17([Generate Upload Signature])
+    UC18([Check Service Health])
 
     UC19([Recover from Session Expiry])
     UC20([Retry Failed Action])
+    UC21([View Dashboard])
   end
 
   Guest --> UC1
@@ -49,6 +50,7 @@ flowchart LR
   Seeker --> UC14
   Seeker --> UC15
   Seeker --> UC16
+  Seeker --> UC21
 
   RoomOwner --> UC6
   RoomOwner --> UC7
@@ -58,26 +60,30 @@ flowchart LR
   RoomOwner --> UC13
   RoomOwner --> UC14
   RoomOwner --> UC15
+  RoomOwner --> UC16
+  RoomOwner --> UC21
 
-  SupportAdmin --> UC17
   IdentityProvider --> UC4
   IdentityProvider --> UC5
-  MediaService --> UC18
+  MediaService --> UC17
+  PlatformOperator --> UC18
+
+  RoomOwner -->|generalizes| Seeker
 
   UC4 -->|includes| UC5
   UC7 -->|includes| UC8
   UC7 -->|includes| UC9
-  UC8 -->|includes| UC18
+  UC8 -->|includes| UC17
 
-  UC11 -->|includes| UC12
-  UC13 -->|extends| UC11
+  UC12 -->|extends| UC11
+  UC15 -->|extends| UC13
+  UC16 -->|includes| UC15
   UC14 -->|extends| UC13
-  UC15 -->|includes| UC14
 
-  UC10 -->|extends| UC7
-  UC16 -->|extends| UC14
-  UC17 -->|includes| UC16
+  UC10 -->|includes| UC8
+  UC10 -->|includes| UC9
 
-  UC6 -->|extends| UC19
+  UC19 -->|extends| UC11
+  UC19 -->|extends| UC15
   UC11 -->|extends| UC20
-  UC14 -->|extends| UC20
+  UC15 -->|extends| UC20

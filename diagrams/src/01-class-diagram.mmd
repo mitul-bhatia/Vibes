@@ -50,15 +50,14 @@ classDiagram
   class ControllerChainMiddleware {
     +requireAuthenticatedUser(body) RequestHandler
     +withAuthenticatedController(handler, options) Handler[]
-    +domainErrorToHttp(error,req,res,next) void
   }
 
   class AuthController {
-    +signUp(req,res) Promise~void~
+    +signup(req,res) Promise~void~
     +login(req,res) Promise~void~
-    +googleStart(req,res) Promise~void~
+    +startGoogleAuth(req,res) void
     +googleCallback(req,res) Promise~void~
-    +googleExchange(req,res) Promise~void~
+    +exchangeGoogleCode(req,res) void
   }
 
   class ProfilesController {
@@ -114,7 +113,7 @@ classDiagram
     +signInWithEmail(credentials) Promise~AuthSession~
     +getGoogleAuthorizationUrl(source,redirectOrigin) string
     +completeGoogleAuthorization(code,state) Promise~ExchangeResult~
-    +exchangeGoogleCode(exchangeCode) Promise~AuthSession~
+    +consumeGoogleExchangeCode(exchangeCode) AuthSession
   }
 
   class DiscoveryService {
@@ -166,6 +165,7 @@ classDiagram
     <<interface>>
     +sendMessage(payload)
     +joinRoom(roomId)
+    +leaveRoom(roomId)
     +send_message(payload)
     +join(conversationId)
   }
@@ -220,10 +220,19 @@ classDiagram
     +name: string?
     +age: int?
     +gender: string?
+    +bio: string?
+    +photos: string[]
     +onboardingCompleted: boolean
-    +city: string
+    +city: string?
     +hasRoom: boolean
     +occupation: string?
+    +sleepSchedule: string?
+    +noiseLevel: int?
+    +guestPolicy: string?
+    +smoking: string?
+    +pets: string?
+    +createdAt: DateTime
+    +updatedAt: DateTime
   }
 
   class Preference {
@@ -232,12 +241,19 @@ classDiagram
     +genderPreference: string
     +minBudget: int
     +maxBudget: int
+    +city: string
     +cleanliness: int
     +sleepSchedule: int
+    +smoking: boolean
+    +drinking: boolean
+    +pets: boolean
+    +socialLevel: int
     +weightCleanliness: int
     +weightSleep: int
     +weightHabits: int
     +weightSocial: int
+    +createdAt: DateTime
+    +updatedAt: DateTime
   }
 
   class Swipe {

@@ -9,11 +9,14 @@
     "diagrams:validate": "node scripts/diagrams/validate-manifest.mjs",
     "diagrams:preflight": "npm run diagrams:validate && node scripts/diagrams/preflight-gate.mjs && npm run diagrams:quality",
     "diagrams:quality": "node scripts/diagrams/quality-gate.mjs",
+    "diagrams:lock": "node scripts/diagrams/lock-diagrams.mjs",
     "diagrams:validate:manifest-only": "node scripts/diagrams/validate-manifest.mjs diagrams/manifest.json --allow-missing-sources",
     "diagrams:book": "npm run diagrams:preflight && node scripts/diagrams/build-diagram-book.mjs"
   },
   "dependencies": {
     "@mermaid-js/mermaid-cli": "^11.12.0",
-    "pdf-lib": "^1.17.1"
+    "pdf-lib": "^1.17.1",
+    "pdfkit": "^0.17.2",
+    "svg-to-pdfkit": "^0.1.8"
   }
 }

@@ -1,0 +1,53 @@
+{
+  "default": {
+    "engine": "svg-pdfkit",
+    "pageMode": "native",
+    "marginsPt": 0,
+    "minPageWidthPt": 300,
+    "minPageHeightPt": 300,
+    "maxPageWidthPt": 14400,
+    "maxPageHeightPt": 14400,
+    "preserveAspectRatio": "xMinYMin meet",
+    "alignX": "left",
+    "alignY": "top",
+    "forceSequenceLifelineToBottom": true
+  },
+  "byType": {},
+  "byId": {
+    "01-class-diagram": {
+      "engine": "native-pdf",
+      "nativePdfFit": true,
+      "nativeWidth": 5600,
+      "nativeHeight": 4200,
+      "nativeScale": 1.2
+    },
+    "03-use-case-diagram": {
+      "engine": "native-pdf",
+      "nativePdfFit": true,
+      "nativeWidth": 5600,
+      "nativeHeight": 4200,
+      "nativeScale": 1.2
+    },
+    "04-activity-diagram": {
+      "engine": "native-pdf",
+      "nativePdfFit": true,
+      "nativeWidth": 5600,
+      "nativeHeight": 4200,
+      "nativeScale": 1.2
+    },
+    "05-sequence-diagram": {
+      "engine": "native-pdf",
+      "nativePdfFit": true,
+      "nativeWidth": 5600,
+      "nativeHeight": 4200,
+      "nativeScale": 1.2
+    },
+    "06-erd-diagram": {
+      "engine": "native-pdf",
+      "nativePdfFit": true,
+      "nativeWidth": 5600,
+      "nativeHeight": 4200,
+      "nativeScale": 1.2
+    }
+  }
+}
